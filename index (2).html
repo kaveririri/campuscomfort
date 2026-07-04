@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>CampusComfort — Sleep Better. Stress Less.</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap');
+
+  :root{
+    --cream: #FEF1DE;
+    --cream-2: #FBE8CC;
+    --maroon: #780001;
+    --maroon-2: #5c0001;
+    --gold: #785D32;
+    --gold-2: #9c7c4f;
+    --navy: #050A30;
+    --navy-soft: rgba(5,10,48,0.6);
+    --glass: rgba(254,241,222,0.55);
+    --glass-border: rgba(5,10,48,0.08);
+    --ease-out: cubic-bezier(.16,1,.3,1);
+    --ease-spring: cubic-bezier(.34,1.56,.64,1);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:
+      radial-gradient(circle at 15% 8%, rgba(120,93,50,0.10), transparent 40%),
+      radial-gradient(circle at 85% 22%, rgba(120,0,1,0.07), transparent 45%),
+      var(--cream);
+    color:var(--navy);
+    font-family:'Manrope', system-ui, sans-serif;
+    overflow-x:hidden;
+    min-height:100vh;
+    position:relative;
+  }
+  h1,h2,h3,.display{font-family:'Sora', system-ui, sans-serif;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important;}
+  }
+
+  a, button{font-family:inherit;}
+  button{cursor:pointer;border:none;background:none;}
+
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
+
+  /* ---------- Ambient background blobs ---------- */
+  .blob-field{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+  .blob{position:absolute;border-radius:50%;filter:blur(60px);opacity:0.35;will-change:transform;}
+  .blob.b1{width:420px;height:420px;background:radial-gradient(circle, var(--gold-2), transparent 70%);top:-10%;left:-8%;animation:drift1 22s ease-in-out infinite;}
+  .blob.b2{width:360px;height:360px;background:radial-gradient(circle, var(--maroon), transparent 70%);top:30%;right:-10%;opacity:0.18;animation:drift2 26s ease-in-out infinite;}
+  .blob.b3{width:300px;height:300px;background:radial-gradient(circle, var(--gold), transparent 70%);bottom:5%;left:20%;opacity:0.2;animation:drift3 30s ease-in-out infinite;}
+  @keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(40px,60px)}}
+  @keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-50px,40px)}}
+  @keyframes drift3{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,-40px)}}
+
+  .particle{position:absolute;border-radius:50%;background:var(--gold-2);opacity:0.5;}
+
+  /* ---------- Nav ---------- */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 24px;
+    transition:background .4s var(--ease-out), backdrop-filter .4s var(--ease-out), box-shadow .4s var(--ease-out), border-color .4s var(--ease-out);
+    border-bottom:1px solid transparent;
+  }
+  nav.scrolled{
+    background:var(--glass);
+    backdrop-filter:blur(16px) saturate(140%);
+    -webkit-backdrop-filter:blur(16px) saturate(140%);
+    border-bottom:1px solid var(--glass-border);
+    box-shadow:0 8px 30px rgba(5,10,48,0.06);
+  }
+  .logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:17px;letter-spacing:-0.02em;}
+  .logo-mark{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--maroon),var(--gold));position:relative;flex-shrink:0;}
+  .logo-mark::after{content:'';position:absolute;inset:5px;border-radius:4px;background:var(--cream);opacity:0.9;}
+  .nav-right{display:flex;align-items:center;gap:10px;}
+  .btn-reserve-nav{
+    background:linear-gradient(135deg,var(--maroon),var(--maroon-2));
+    color:var(--cream);padding:10px 20px;border-radius:100px;font-weight:700;font-size:13.5px;
+    box-shadow:0 4px 14px rgba(120,0,1,0.25);
+    transition:transform .3s var(--ease-spring), box-shadow .3s var(--ease-out);
+    position:relative;overflow:hidden;
+  }
+  .btn-reserve-nav:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 8px 22px rgba(120,0,1,0.35);}
+  .hamburger{width:38px;height:38px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:rgba(5,10,48,0.05);}
+  .hamburger span{width:16px;height:2px;background:var(--navy);border-radius:2px;transition:transform .3s var(--ease-out), opacity .3s;}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    min-height:100vh;display:flex;align-items:center;position:relative;
+    padding:110px 0 60px;z-index:1;
+  }
+  .hero-grid{display:grid;grid-template-columns:1.05fr 0.95fr;align-items:center;gap:20px;}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:12.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;
+    color:var(--maroon);background:rgba(120,0,1,0.07);
+    padding:7px 14px;border-radius:100px;margin-bottom:22px;
+    opacity:0;transform:translateY(10px);
+  }
+  .eyebrow-dot{width:6px;height:6px;border-radius:50%;background:var(--maroon);animation:pulse-dot 2s ease-in-out infinite;}
+  @keyframes pulse-dot{0%,100%{opacity:1;}50%{opacity:0.3;}}
+
+  .hero h1{
+    font-size:clamp(40px, 6.4vw, 78px);
+    font-weight:800;line-height:0.98;letter-spacing:-0.03em;
+    color:var(--navy);
+  }
+  .hero h1 .word{display:inline-block;opacity:0;transform:translateY(28px);filter:blur(6px);}
+  .hero h1 .accent{
+    background:linear-gradient(120deg,var(--maroon),var(--gold-2));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+
+  .hero-sub{
+    margin-top:22px;font-size:17px;color:var(--navy-soft);font-weight:500;max-width:400px;
+    opacity:0;transform:translateY(14px);
+  }
+
+  .hero-ctas{margin-top:34px;display:flex;align-items:center;gap:18px;opacity:0;transform:translateY(14px);}
+  .btn-primary{
+    position:relative;overflow:hidden;
+    background:linear-gradient(135deg,var(--maroon),var(--maroon-2));
+    color:var(--cream);padding:16px 30px;border-radius:100px;
+    font-weight:700;font-size:15.5px;letter-spacing:-0.01em;
+    box-shadow:0 10px 30px rgba(120,0,1,0.3), 0 0 0 0 rgba(120,0,1,0.4);
+    transition:transform .35s var(--ease-spring), box-shadow .4s var(--ease-out);
+    display:inline-flex;align-items:center;gap:10px;
+  }
+  .btn-primary:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(120,0,1,0.4), 0 0 0 8px rgba(120,0,1,0.08);}
+  .btn-primary .arrow{transition:transform .3s var(--ease-spring);}
+  .btn-primary:hover .arrow{transform:translateX(4px);}
+  .ripple{position:absolute;border-radius:50%;background:rgba(254,241,222,0.5);transform:scale(0);animation:ripple-anim .6s var(--ease-out);pointer-events:none;}
+  @keyframes ripple-anim{to{transform:scale(4);opacity:0;}}
+
+  .price-note{font-size:13.5px;color:var(--navy-soft);font-weight:600;}
+
+  .scroll-cue{
+    position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
+    display:flex;flex-direction:column;align-items:center;gap:6px;
+    font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--navy-soft);
+    opacity:0;
+  }
+  .scroll-cue .line{width:1.5px;height:28px;background:linear-gradient(to bottom, var(--maroon), transparent);animation:scroll-line 1.8s ease-in-out infinite;}
+  @keyframes scroll-line{0%{transform:scaleY(0);transform-origin:top;}50%{transform:scaleY(1);transform-origin:top;}51%{transform-origin:bottom;}100%{transform:scaleY(0);transform-origin:bottom;}}
+
+  /* ---------- Mattress 3D object ---------- */
+  .mattress-stage{
+    position:relative;height:560px;display:flex;align-items:center;justify-content:center;
+    perspective:1400px;
+  }
+  .mattress-shape{position:absolute;border-radius:50%;filter:blur(40px);}
+  .ms1{width:280px;height:280px;background:radial-gradient(circle, var(--gold-2), transparent 70%);top:8%;right:2%;opacity:0.4;animation:float-shape 8s ease-in-out infinite;}
+  .ms2{width:200px;height:200px;background:radial-gradient(circle, var(--maroon), transparent 70%);bottom:5%;left:0%;opacity:0.22;animation:float-shape 10s ease-in-out infinite reverse;}
+  @keyframes float-shape{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-18px) scale(1.05);}}
+
+  .ring{
+    position:absolute;border:1.5px solid var(--glass-border);border-radius:50%;
+  }
+  .ring.r1{width:420px;height:420px;animation:spin-slow 40s linear infinite;}
+  .ring.r2{width:340px;height:340px;border-style:dashed;border-color:rgba(120,93,50,0.25);animation:spin-slow 60s linear infinite reverse;}
+  @keyframes spin-slow{to{transform:rotate(360deg);}}
+
+  .mattress-3d{
+    width:320px;height:320px;position:relative;
+    transform-style:preserve-3d;
+    transform:rotateX(8deg) rotateY(-18deg);
+    transition:transform .15s ease-out;
+    opacity:0;
+  }
+  .mattress-roll{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    transform-style:preserve-3d;
+  }
+  /* Built as a horizontal cylinder viewed at an angle: a wrapped tube body
+     capped by two circular ends, so it reads as a rolled mattress rather
+     than a flat rounded box. */
+  .roll-cylinder{
+    position:relative;width:270px;height:186px;
+    transform:rotateZ(6deg);
+    transform-style:preserve-3d;
+  }
+  .roll-tube{
+    position:absolute;left:46px;right:46px;top:0;bottom:0;border-radius:40px;
+    background:
+      linear-gradient(90deg,
+        rgba(120,93,50,0.3) 0%,
+        rgba(255,255,255,0.9) 6%,
+        var(--cream) 16%,
+        #fffaf0 34%,
+        var(--cream) 50%,
+        #fffaf0 66%,
+        var(--cream) 84%,
+        rgba(255,255,255,0.85) 94%,
+        rgba(120,93,50,0.3) 100%);
+    box-shadow:
+      0 45px 80px rgba(5,10,48,0.28),
+      0 14px 30px rgba(120,0,1,0.12);
+  }
+  .roll-tube::before{
+    content:'';position:absolute;inset:16px 0;
+    background-image:repeating-linear-gradient(90deg,
+      transparent 0px, transparent 19px,
+      rgba(120,93,50,0.16) 20px, transparent 21px);
+    opacity:0.75;
+  }
+  .roll-tube::after{
+    content:'';position:absolute;top:8%;left:4%;right:4%;height:30%;border-radius:100px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.8), transparent);
+    filter:blur(3px);
+  }
+  .roll-cap-end{
+    position:absolute;width:186px;height:186px;border-radius:50%;top:0;
+    background:radial-gradient(circle at 36% 30%, #fffdf7 0%, var(--cream) 55%, var(--cream-2) 100%);
+    box-shadow:
+      inset 0 0 0 9px rgba(120,93,50,0.10),
+      inset 0 0 0 10px rgba(255,255,255,0.4),
+      0 10px 22px rgba(5,10,48,0.2);
+    transform:scaleX(0.42);
+  }
+  .roll-cap-end.left{left:-70px;}
+  .roll-cap-end.right{left:calc(100% - 116px);}
+  .roll-cap-end .cap-ring{position:absolute;inset:20px;border-radius:50%;border:2px dashed rgba(120,93,50,0.3);}
+  .roll-cap-end .cap-core{
+    position:absolute;inset:56px;border-radius:50%;
+    background:linear-gradient(135deg,var(--gold-2),var(--gold));
+    box-shadow:inset 0 4px 10px rgba(0,0,0,0.15);
+  }
+  .roll-band{
+    position:absolute;left:46px;right:46px;top:50%;height:58px;
+    transform:translateY(-50%);
+    background:linear-gradient(90deg,var(--maroon-2),var(--maroon),var(--maroon-2));
+    border-radius:100px;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 14px 28px rgba(120,0,1,0.4), inset 0 2px 6px rgba(255,255,255,0.15);
+  }
+  .roll-band span{
+    color:var(--cream);font-family:'Sora';font-weight:800;font-size:14px;letter-spacing:0.03em;white-space:nowrap;
+  }
+
+  .floating-tag{
+    position:absolute;padding:9px 15px;border-radius:14px;
+    background:var(--glass);backdrop-filter:blur(10px);
+    border:1px solid var(--glass-border);
+    font-size:12px;font-weight:700;color:var(--navy);
+    box-shadow:0 10px 25px rgba(5,10,48,0.08);
+    display:flex;align-items:center;gap:6px;
+    opacity:0;
+  }
+  .floating-tag .dot{width:7px;height:7px;border-radius:50%;background:#3ba55d;}
+  .tag-1{top:14%;left:-4%;animation:tag-float 5s ease-in-out infinite;}
+  .tag-2{bottom:16%;right:-2%;animation:tag-float 6s ease-in-out infinite 0.5s;}
+  @keyframes tag-float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+
+  /* ---------- reveal utility ---------- */
+  .reveal{opacity:0;transform:translateY(32px);transition:opacity .8s var(--ease-out), transform .8s var(--ease-out);}
+  .reveal.in{opacity:1;transform:translateY(0);}
+  .reveal-scale{opacity:0;transform:scale(0.94) translateY(20px);transition:opacity .7s var(--ease-out), transform .7s var(--ease-out);}
+  .reveal-scale.in{opacity:1;transform:scale(1) translateY(0);}
+
+  /* ---------- Section shared ---------- */
+  section{position:relative;z-index:1;}
+  .section-pad{padding:100px 0;}
+  .section-head{text-align:center;margin-bottom:52px;}
+  .section-eyebrow{
+    font-size:12px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;
+  }
+  .section-head h2{
+    font-size:clamp(30px,4vw,44px);font-weight:800;letter-spacing:-0.02em;color:var(--navy);
+  }
+
+  /* ---------- Products ---------- */
+  .products-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:760px;margin:0 auto;}
+  .product-card{
+    position:relative;border-radius:28px;padding:36px 30px;
+    background:linear-gradient(160deg, rgba(255,255,255,0.6), rgba(254,241,222,0.3));
+    border:1px solid var(--glass-border);
+    box-shadow:0 20px 50px rgba(5,10,48,0.07);
+    cursor:pointer;overflow:hidden;
+    transition:transform .5s var(--ease-spring), box-shadow .5s var(--ease-out), border-color .4s;
+    transform-style:preserve-3d;
+  }
+  .product-card::before{
+    content:'';position:absolute;inset:0;opacity:0;
+    background:linear-gradient(160deg, rgba(120,0,1,0.06), rgba(120,93,50,0.1));
+    transition:opacity .5s var(--ease-out);
+  }
+  .product-card:hover{transform:translateY(-10px) rotate(-0.6deg);box-shadow:0 30px 60px rgba(5,10,48,0.14);border-color:rgba(120,0,1,0.15);}
+  .product-card:hover::before{opacity:1;}
+  .product-card.plus:hover{transform:translateY(-10px) rotate(0.6deg);}
+  .card-badge{
+    display:inline-block;font-size:11px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;
+    padding:5px 12px;border-radius:100px;margin-bottom:18px;position:relative;z-index:1;
+  }
+  .card-badge.ess{background:rgba(120,93,50,0.12);color:var(--gold);}
+  .card-badge.plus{background:rgba(120,0,1,0.1);color:var(--maroon);}
+  .product-card h3{font-size:26px;font-weight:800;letter-spacing:-0.01em;position:relative;z-index:1;}
+  .product-price{
+    font-size:44px;font-weight:800;letter-spacing:-0.02em;margin:14px 0 6px;position:relative;z-index:1;
+    display:flex;align-items:baseline;gap:6px;
+  }
+  .product-price .curr{font-size:22px;font-weight:700;opacity:0.6;}
+  .product-old{font-size:14px;color:var(--navy-soft);text-decoration:line-through;position:relative;z-index:1;margin-bottom:18px;}
+  .product-feats{list-style:none;position:relative;z-index:1;margin-bottom:26px;}
+  .product-feats li{font-size:14px;color:var(--navy-soft);font-weight:600;padding:5px 0;display:flex;align-items:center;gap:8px;}
+  .product-feats li::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--gold);flex-shrink:0;}
+  .card-cta{
+    position:relative;z-index:1;
+    display:flex;align-items:center;justify-content:space-between;
+    font-weight:700;font-size:14.5px;color:var(--navy);
+    padding-top:16px;border-top:1px solid var(--glass-border);
+  }
+  .card-cta .arrow-circ{
+    width:34px;height:34px;border-radius:50%;background:var(--navy);color:var(--cream);
+    display:flex;align-items:center;justify-content:center;
+    transition:transform .4s var(--ease-spring), background .4s;
+  }
+  .product-card:hover .arrow-circ{background:var(--maroon);transform:translateX(4px) rotate(45deg);}
+
+  /* ---------- Feature strip ---------- */
+  .feature-strip{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:920px;margin:0 auto;
+  }
+  .feat-item{
+    text-align:center;padding:26px 14px;border-radius:20px;
+    background:rgba(255,255,255,0.35);border:1px solid var(--glass-border);
+    transition:transform .4s var(--ease-spring), background .4s;
+  }
+  .feat-item:hover{transform:translateY(-6px);background:rgba(255,255,255,0.55);}
+  .feat-icon{
+    width:50px;height:50px;border-radius:14px;margin:0 auto 14px;
+    display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg, var(--maroon), var(--gold));
+    color:var(--cream);
+    animation:icon-bounce 3s ease-in-out infinite;
+  }
+  .feat-item:nth-child(2) .feat-icon{animation-delay:0.2s;}
+  .feat-item:nth-child(3) .feat-icon{animation-delay:0.4s;}
+  .feat-item:nth-child(4) .feat-icon{animation-delay:0.6s;}
+  @keyframes icon-bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);}}
+  .feat-item span{font-size:13.5px;font-weight:700;color:var(--navy);}
+
+  /* ---------- Footer ---------- */
+  footer{padding:60px 0 40px;position:relative;z-index:1;}
+  .footer-inner{
+    display:flex;flex-direction:column;align-items:center;gap:22px;text-align:center;
+    padding-top:44px;border-top:1px solid var(--glass-border);
+  }
+  .footer-tag{font-size:14px;color:var(--navy-soft);font-weight:600;}
+  .footer-links{display:flex;gap:26px;}
+  .footer-links a{
+    width:42px;height:42px;border-radius:50%;background:rgba(5,10,48,0.05);
+    display:flex;align-items:center;justify-content:center;color:var(--navy);
+    transition:transform .3s var(--ease-spring), background .3s;
+  }
+  .footer-links a:hover{transform:translateY(-4px) scale(1.05);background:var(--maroon);color:var(--cream);}
+  .footer-copy{font-size:11.5px;color:var(--navy-soft);opacity:0.7;}
+
+  /* ---------- Order flow overlay ---------- */
+  .order-overlay{
+    position:fixed;inset:0;z-index:1000;
+    background:rgba(5,10,48,0.35);backdrop-filter:blur(4px);
+    display:flex;align-items:center;justify-content:center;
+    opacity:0;pointer-events:none;
+    transition:opacity .45s var(--ease-out);
+    padding:20px;
+  }
+  .order-overlay.active{opacity:1;pointer-events:auto;}
+  .order-panel{
+    width:100%;max-width:460px;max-height:88vh;overflow-y:auto;
+    background:var(--cream);border-radius:32px;
+    box-shadow:0 40px 90px rgba(5,10,48,0.35);
+    padding:34px 30px 30px;
+    transform:scale(0.85) translateY(40px);
+    transition:transform .55s var(--ease-spring);
+    position:relative;
+  }
+  .order-overlay.active .order-panel{transform:scale(1) translateY(0);}
+  .order-close{
+    position:absolute;top:22px;right:22px;width:34px;height:34px;border-radius:50%;
+    background:rgba(5,10,48,0.06);display:flex;align-items:center;justify-content:center;
+    transition:background .3s, transform .3s;
+  }
+  .order-close:hover{background:rgba(120,0,1,0.1);transform:rotate(90deg);}
+
+  .progress-track{display:flex;gap:6px;margin-bottom:30px;margin-top:6px;}
+  .progress-seg{flex:1;height:4px;border-radius:100px;background:rgba(5,10,48,0.08);overflow:hidden;position:relative;}
+  .progress-seg .fill{position:absolute;inset:0;background:linear-gradient(90deg,var(--maroon),var(--gold-2));border-radius:100px;transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease-out);}
+  .progress-seg.done .fill{transform:scaleX(1);}
+
+  .order-step{display:none;}
+  .order-step.active{display:block;animation:step-in .5s var(--ease-out);}
+  @keyframes step-in{from{opacity:0;transform:translateX(18px);}to{opacity:1;transform:translateX(0);}}
+
+  .order-step h3{font-size:23px;font-weight:800;letter-spacing:-0.01em;margin-bottom:6px;}
+  .order-step .step-sub{font-size:13.5px;color:var(--navy-soft);font-weight:600;margin-bottom:24px;}
+
+  .mattress-pick{
+    display:flex;flex-direction:column;gap:12px;margin-bottom:8px;
+  }
+  .pick-option{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 18px;border-radius:18px;border:2px solid var(--glass-border);
+    background:rgba(255,255,255,0.5);cursor:pointer;
+    transition:border-color .3s, background .3s, transform .3s var(--ease-spring);
+  }
+  .pick-option:hover{transform:translateY(-2px);}
+  .pick-option.selected{border-color:var(--maroon);background:rgba(120,0,1,0.05);}
+  .pick-option .pick-name{font-weight:700;font-size:15px;}
+  .pick-option .pick-price{font-weight:800;font-size:15px;color:var(--maroon);}
+  .pick-radio{width:20px;height:20px;border-radius:50%;border:2px solid var(--glass-border);flex-shrink:0;margin-right:12px;position:relative;transition:border-color .3s;}
+  .pick-option.selected .pick-radio{border-color:var(--maroon);}
+  .pick-option.selected .pick-radio::after{content:'';position:absolute;inset:3px;border-radius:50%;background:var(--maroon);animation:pop-in .3s var(--ease-spring);}
+  @keyframes pop-in{from{transform:scale(0);}to{transform:scale(1);}}
+  .pick-left{display:flex;align-items:center;}
+
+  .form-group{margin-bottom:16px;}
+  .form-group label{display:block;font-size:12.5px;font-weight:700;color:var(--navy-soft);margin-bottom:7px;letter-spacing:0.01em;}
+  .form-group input, .form-group select{
+    width:100%;padding:13px 16px;border-radius:14px;border:2px solid var(--glass-border);
+    background:rgba(255,255,255,0.6);font-size:14.5px;font-weight:600;color:var(--navy);
+    transition:border-color .3s, box-shadow .3s;
+    font-family:inherit;
+  }
+  .form-group input:focus, .form-group select:focus{
+    outline:none;border-color:var(--maroon);box-shadow:0 0 0 4px rgba(120,0,1,0.08);
+  }
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
+  .pay-summary{
+    background:rgba(120,93,50,0.06);border-radius:18px;padding:18px 20px;margin-bottom:20px;
+  }
+  .pay-row{display:flex;justify-content:space-between;font-size:14px;font-weight:600;color:var(--navy-soft);padding:5px 0;}
+  .pay-row.total{border-top:1px solid var(--glass-border);margin-top:8px;padding-top:12px;font-size:16px;font-weight:800;color:var(--navy);}
+  .pay-methods{display:flex;flex-direction:column;gap:10px;margin-bottom:22px;}
+  .pay-method{
+    display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:14px;
+    border:2px solid var(--glass-border);background:rgba(255,255,255,0.5);cursor:pointer;
+    transition:border-color .3s, transform .3s var(--ease-spring);
+    font-weight:700;font-size:14px;
+  }
+  .pay-method.selected{border-color:var(--maroon);background:rgba(120,0,1,0.05);}
+  .pay-method:hover{transform:translateY(-2px);}
+
+  .step-nav{display:flex;gap:12px;margin-top:8px;}
+  .btn-back{
+    padding:15px 22px;border-radius:100px;font-weight:700;font-size:14.5px;
+    background:rgba(5,10,48,0.06);color:var(--navy);
+    transition:background .3s, transform .3s var(--ease-spring);
+  }
+  .btn-back:hover{background:rgba(5,10,48,0.1);}
+  .btn-continue{
+    flex:1;padding:15px 22px;border-radius:100px;font-weight:700;font-size:14.5px;
+    background:linear-gradient(135deg,var(--maroon),var(--maroon-2));color:var(--cream);
+    box-shadow:0 8px 22px rgba(120,0,1,0.28);
+    transition:transform .3s var(--ease-spring), box-shadow .3s, opacity .3s;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    position:relative;overflow:hidden;
+  }
+  .btn-continue:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(120,0,1,0.35);}
+  .btn-continue:disabled{opacity:0.4;pointer-events:none;}
+
+  /* ---------- Confirmation ---------- */
+  .confirm-wrap{text-align:center;padding:10px 0;}
+  .check-circle{
+    width:84px;height:84px;border-radius:50%;margin:0 auto 24px;
+    background:linear-gradient(135deg,#3ba55d,#2d8a49);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 15px 35px rgba(59,165,93,0.35);
+    animation:check-pop .6s var(--ease-spring);
+  }
+  @keyframes check-pop{0%{transform:scale(0);}70%{transform:scale(1.1);}100%{transform:scale(1);}}
+  .check-circle svg{width:38px;height:38px;stroke:white;stroke-width:3;fill:none;}
+  .check-circle path{stroke-dasharray:40;stroke-dashoffset:40;animation:draw-check .5s .3s ease-out forwards;}
+  @keyframes draw-check{to{stroke-dashoffset:0;}}
+
+  .confirm-wrap h3{font-size:25px;font-weight:800;margin-bottom:8px;}
+  .confirm-wrap .step-sub{margin-bottom:24px;}
+  .order-id-box{
+    background:rgba(120,0,1,0.05);border-radius:16px;padding:16px 20px;margin-bottom:14px;
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .order-id-box .label{font-size:12px;font-weight:700;color:var(--navy-soft);text-transform:uppercase;letter-spacing:0.05em;}
+  .order-id-box .value{font-size:16px;font-weight:800;color:var(--maroon);font-family:'Sora';}
+  .pickup-box{
+    background:rgba(120,93,50,0.08);border-radius:16px;padding:16px 20px;margin-bottom:26px;
+    text-align:left;
+  }
+  .pickup-box .label{font-size:12px;font-weight:700;color:var(--navy-soft);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;}
+  .pickup-box .value{font-size:14.5px;font-weight:700;color:var(--navy);}
+
+  .confetti-piece{position:absolute;width:8px;height:8px;top:-10px;opacity:0.9;pointer-events:none;border-radius:2px;}
+
+  /* ---------- Mobile ---------- */
+  @media (max-width: 860px){
+    .wrap{padding:0 20px;}
+    .hero{padding:100px 0 40px;min-height:auto;}
+    .hero-grid{grid-template-columns:1fr;gap:10px;}
+    .hero h1{font-size:clamp(38px,10vw,54px);text-align:left;}
+    .hero-sub{max-width:100%;}
+    .mattress-stage{height:380px;order:-1;margin-bottom:10px;}
+    .mattress-3d{width:230px;height:230px;}
+    .roll-cylinder{width:186px;height:128px;}
+    .roll-tube{left:32px;right:32px;border-radius:28px;}
+    .roll-cap-end{width:128px;height:128px;}
+    .roll-cap-end.left{left:-48px;}
+    .roll-cap-end.right{left:calc(100% - 80px);}
+    .roll-band{left:32px;right:32px;height:40px;}
+    .roll-band span{font-size:11px;}
+    .ring.r1{width:280px;height:280px;}
+    .ring.r2{width:220px;height:220px;}
+    .tag-1{left:0%;top:8%;}
+    .tag-2{right:0%;bottom:10%;}
+    .products-grid{grid-template-columns:1fr;max-width:400px;}
+    .feature-strip{grid-template-columns:repeat(2,1fr);max-width:400px;}
+    .form-row{grid-template-columns:1fr;}
+    .section-pad{padding:70px 0;}
+    .order-panel{padding:28px 22px 24px;border-radius:26px;}
+    .scroll-cue{display:none;}
+  }
+
+  @media (max-width: 380px){
+    .hero h1{font-size:38px;}
+  }
+
+  .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);}
+
+  button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, .pick-option:focus-visible, .pay-method:focus-visible{
+    outline:2.5px solid var(--maroon);outline-offset:2px;
+  }
+</style>
+</head>
+<body>
+
+<div class="blob-field" id="blobField">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+</div>
+
+<nav id="navbar">
+  <div class="logo">
+    <div class="logo-mark"></div>
+    CampusComfort
+  </div>
+  <div class="nav-right">
+    <button class="btn-reserve-nav" id="navReserveBtn">Reserve Now</button>
+    <button class="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow" id="eyebrow"><span class="eyebrow-dot"></span> For Class of 2030 · Hostel Move-In</div>
+      <h1 id="heroHeading">
+        <span class="word">Move</span> <span class="word">In.</span><br>
+        <span class="word accent">Sleep</span> <span class="word accent">Easy.</span>
+      </h1>
+      <p class="hero-sub" id="heroSub">Premium mattresses for your hostel room. Delivered before you unpack.</p>
+      <div class="hero-ctas" id="heroCtas">
+        <button class="btn-primary" id="heroReserveBtn">
+          Reserve Yours <span class="arrow">→</span>
+        </button>
+        <span class="price-note">From ₹2,299</span>
+      </div>
+    </div>
+
+    <div class="mattress-stage" id="mattressStage">
+      <div class="ring r1"></div>
+      <div class="ring r2"></div>
+      <div class="mattress-shape ms1"></div>
+      <div class="mattress-shape ms2"></div>
+      <div class="floating-tag tag-1"><span class="dot"></span> In stock</div>
+      <div class="floating-tag tag-2"><span class="dot"></span> 2-day delivery</div>
+      <div class="mattress-3d" id="mattress3d">
+        <div class="mattress-roll">
+          <div class="roll-cylinder">
+            <div class="roll-cap-end left"><div class="cap-ring"></div><div class="cap-core"></div></div>
+            <div class="roll-tube"></div>
+            <div class="roll-cap-end right"><div class="cap-ring"></div><div class="cap-core"></div></div>
+            <div class="roll-band"><span>CampusComfort</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-cue" id="scrollCue"><span class="line"></span>Scroll</div>
+</section>
+
+<section class="section-pad" id="products">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-eyebrow">Choose Your Fit</div>
+      <h2>Comfort, Simplified.</h2>
+    </div>
+    <div class="products-grid">
+      <div class="product-card ess reveal-scale" data-plan="Essential" data-price="2299" tabindex="0" role="button" aria-label="Reserve Essential mattress for ₹2299">
+        <span class="card-badge ess">Essential</span>
+        <h3>Essential</h3>
+        <div class="product-price"><span class="curr">₹</span>2,299</div>
+        <div class="product-old">₹3,299 outside</div>
+        <ul class="product-feats">
+          <li>Medium-firm foam</li>
+          <li>Breathable cover</li>
+          <li>Fits standard hostel bed</li>
+        </ul>
+        <div class="card-cta">Reserve This <span class="arrow-circ">→</span></div>
+      </div>
+      <div class="product-card plus reveal-scale" data-plan="Plus" data-price="2499" tabindex="0" role="button" aria-label="Reserve Plus mattress for ₹2499">
+        <span class="card-badge plus">Plus</span>
+        <h3>Plus</h3>
+        <div class="product-price"><span class="curr">₹</span>2,499</div>
+        <div class="product-old">₹3,499 outside</div>
+        <ul class="product-feats">
+          <li>Extra-plush layer</li>
+          <li>Cooling top cover</li>
+          <li>Fits standard hostel bed</li>
+        </ul>
+        <div class="card-cta">Reserve This <span class="arrow-circ">→</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-pad">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-eyebrow">Why CampusComfort</div>
+      <h2>Sorted. Every Time.</h2>
+    </div>
+    <div class="feature-strip">
+      <div class="feat-item reveal">
+        <div class="feat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h7l-1 8 11-13h-7l1-7z"/></svg>
+        </div>
+        <span>Fast Delivery</span>
+      </div>
+      <div class="feat-item reveal">
+        <div class="feat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+        </div>
+        <span>Premium Quality</span>
+      </div>
+      <div class="feat-item reveal">
+        <div class="feat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <span>Student Pricing</span>
+      </div>
+      <div class="feat-item reveal">
+        <div class="feat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM9 9a3 3 0 1 1 5 2c-1 1-2 1-2 3M12 17h.01"/></svg>
+        </div>
+        <span>Support</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-inner reveal">
+      <div class="logo"><div class="logo-mark"></div>CampusComfort</div>
+      <div class="footer-tag">Sleep Better. Stress Less.</div>
+      <div class="footer-links">
+        <a href="#" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+        <a href="#" aria-label="WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21l1.65-4.95A9 9 0 1 1 8.5 19.5L3 21z"/></svg></a>
+        <a href="#" aria-label="Email"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 6 10 7L22 6"/></svg></a>
+      </div>
+      <div class="footer-copy">© 2026 CampusComfort. Made for your first year.</div>
+    </div>
+  </div>
+</footer>
+
+<!-- ================= ORDER FLOW OVERLAY ================= -->
+<div class="order-overlay" id="orderOverlay">
+  <div class="order-panel" role="dialog" aria-modal="true" aria-label="Reserve your mattress">
+    <button class="order-close" id="orderClose" aria-label="Close">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+
+    <div class="progress-track" id="progressTrack">
+      <div class="progress-seg" data-seg="1"><div class="fill"></div></div>
+      <div class="progress-seg" data-seg="2"><div class="fill"></div></div>
+      <div class="progress-seg" data-seg="3"><div class="fill"></div></div>
+    </div>
+
+    <!-- STEP 1 -->
+    <div class="order-step active" data-step="1">
+      <h3>Choose Mattress</h3>
+      <p class="step-sub">Pick the fit for your hostel bed.</p>
+      <div class="mattress-pick">
+        <div class="pick-option" data-plan="Essential" data-price="2299">
+          <div class="pick-left"><div class="pick-radio"></div><span class="pick-name">Essential</span></div>
+          <span class="pick-price">₹2,299</span>
+        </div>
+        <div class="pick-option" data-plan="Plus" data-price="2499">
+          <div class="pick-left"><div class="pick-radio"></div><span class="pick-name">Plus</span></div>
+          <span class="pick-price">₹2,499</span>
+        </div>
+      </div>
+      <div class="step-nav" style="margin-top:20px;">
+        <button class="btn-continue" id="toStep2" disabled>Continue <span>→</span></button>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="order-step" data-step="2">
+      <h3>Student Details</h3>
+      <p class="step-sub">So we know where to deliver.</p>
+      <div class="form-group">
+        <label for="fullName">Full Name</label>
+        <input type="text" id="fullName" placeholder="Your name" autocomplete="name">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="phone">Phone</label>
+          <input type="tel" id="phone" placeholder="10-digit number" autocomplete="tel">
+        </div>
+        <div class="form-group">
+          <label for="hostel">Hostel Block</label>
+          <select id="hostel">
+            <option value="">Select</option>
+            <option>Block A</option>
+            <option>Block B</option>
+            <option>Block C</option>
+            <option>Block D</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="room">Room Number</label>
+        <input type="text" id="room" placeholder="e.g. 214">
+      </div>
+      <div class="step-nav">
+        <button class="btn-back" id="backTo1">Back</button>
+        <button class="btn-continue" id="toStep3" disabled>Continue <span>→</span></button>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="order-step" data-step="3">
+      <h3>Payment</h3>
+      <p class="step-sub">One tap. That's it.</p>
+      <div class="pay-summary" id="paySummary">
+        <div class="pay-row"><span id="sumPlanLabel">Mattress</span><span id="sumPlanPrice">₹0</span></div>
+        <div class="pay-row"><span>Delivery</span><span>Free</span></div>
+        <div class="pay-row total"><span>Total</span><span id="sumTotal">₹0</span></div>
+      </div>
+      <div class="pay-methods">
+        <div class="pay-method" data-method="UPI">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--maroon)" stroke-width="2"><path d="M2 12h20M12 2v20"/></svg>
+          UPI
+        </div>
+        <div class="pay-method" data-method="Card">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--maroon)" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+          Card
+        </div>
+        <div class="pay-method" data-method="Cash on Delivery">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--maroon)" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 12h6M12 9v6"/></svg>
+          Cash on Delivery
+        </div>
+      </div>
+      <div class="step-nav">
+        <button class="btn-back" id="backTo2">Back</button>
+        <button class="btn-continue" id="toConfirm" disabled>Pay & Reserve <span>→</span></button>
+      </div>
+    </div>
+
+    <!-- STEP 4: CONFIRMATION -->
+    <div class="order-step" data-step="4">
+      <div class="confirm-wrap">
+        <div class="check-circle">
+          <svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <h3>Reserved.</h3>
+        <p class="step-sub">You're all set for move-in.</p>
+        <div class="order-id-box">
+          <span class="label">Order ID</span>
+          <span class="value" id="orderIdVal">#CC—0000</span>
+        </div>
+        <div class="pickup-box">
+          <div class="label">Expected Delivery</div>
+          <div class="value">Within 2 days of hostel check-in</div>
+        </div>
+        <button class="btn-continue" id="doneBtn" style="width:100%;">Done</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function(){
+  // ---------- Nav scroll state ----------
+  const nav = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  }, { passive: true });
+
+  // ---------- Hero load sequence ----------
+  function heroSequence(){
+    const eyebrow = document.getElementById('eyebrow');
+    const words = document.querySelectorAll('#heroHeading .word');
+    const sub = document.getElementById('heroSub');
+    const ctas = document.getElementById('heroCtas');
+    const mattress = document.getElementById('mattress3d');
+    const scrollCue = document.getElementById('scrollCue');
+
+    setTimeout(() => { eyebrow.style.transition = 'opacity .6s ease, transform .6s ease'; eyebrow.style.opacity = 1; eyebrow.style.transform = 'translateY(0)'; }, 100);
+
+    words.forEach((w, i) => {
+      setTimeout(() => {
+        w.style.transition = 'opacity .6s cubic-bezier(.16,1,.3,1), transform .6s cubic-bezier(.16,1,.3,1), filter .6s ease';
+        w.style.opacity = 1;
+        w.style.transform = 'translateY(0)';
+        w.style.filter = 'blur(0)';
+      }, 320 + i * 130);
+    });
+
+    setTimeout(() => { sub.style.transition = 'opacity .6s ease, transform .6s ease'; sub.style.opacity = 1; sub.style.transform = 'translateY(0)'; }, 900);
+    setTimeout(() => { ctas.style.transition = 'opacity .6s ease, transform .6s ease'; ctas.style.opacity = 1; ctas.style.transform = 'translateY(0)'; }, 1050);
+
+    setTimeout(() => {
+      mattress.style.transition = 'opacity .8s cubic-bezier(.34,1.56,.64,1), transform .8s cubic-bezier(.34,1.56,.64,1)';
+      mattress.style.opacity = 1;
+    }, 500);
+
+    setTimeout(() => { scrollCue.style.transition = 'opacity .6s ease'; scrollCue.style.opacity = 1; }, 1400);
+
+    document.querySelectorAll('.floating-tag').forEach((tag, i) => {
+      setTimeout(() => { tag.style.transition = 'opacity .6s ease'; tag.style.opacity = 1; }, 1200 + i * 150);
+    });
+  }
+  heroSequence();
+
+  // ---------- Mattress cursor parallax ----------
+  const stage = document.getElementById('mattressStage');
+  const mattress3d = document.getElementById('mattress3d');
+  let baseRX = 8, baseRY = -18;
+  function handleMove(clientX, clientY){
+    const rect = stage.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const dx = (clientX - cx) / (rect.width / 2);
+    const dy = (clientY - cy) / (rect.height / 2);
+    const rotY = baseRY + dx * 14;
+    const rotX = baseRX - dy * 10;
+    mattress3d.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+  }
+  window.addEventListener('mousemove', (e) => handleMove(e.clientX, e.clientY), { passive: true });
+  window.addEventListener('mouseleave', () => { mattress3d.style.transform = `rotateX(${baseRX}deg) rotateY(${baseRY}deg)`; });
+
+  // ---------- Scroll reveal ----------
+  const revealEls = document.querySelectorAll('.reveal, .reveal-scale');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting){
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+
+  // stagger product cards
+  document.querySelectorAll('.product-card').forEach((card, i) => {
+    card.style.transitionDelay = (i * 0.12) + 's';
+  });
+  document.querySelectorAll('.feat-item').forEach((f, i) => {
+    f.style.transitionDelay = (i * 0.08) + 's';
+  });
+
+  // ---------- Button ripple ----------
+  document.querySelectorAll('.btn-primary, .btn-reserve-nav').forEach(btn => {
+    btn.addEventListener('click', function(e){
+      const rect = btn.getBoundingClientRect();
+      const ripple = document.createElement('span');
+      ripple.className = 'ripple';
+      const size = Math.max(rect.width, rect.height);
+      ripple.style.width = ripple.style.height = size + 'px';
+      ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+      ripple.style.top = (e.clientY - rect.top - size/2) + 'px';
+      btn.style.position = 'relative';
+      btn.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 650);
+    });
+  });
+
+  // ================= ORDER FLOW LOGIC =================
+  const overlay = document.getElementById('orderOverlay');
+  const panel = overlay.querySelector('.order-panel');
+  const steps = overlay.querySelectorAll('.order-step');
+  const segs = overlay.querySelectorAll('.progress-seg');
+  let orderState = { plan: null, price: null };
+
+  function openOrder(prefillPlan, prefillPrice){
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    goToStep(1);
+    if (prefillPlan){
+      orderState.plan = prefillPlan;
+      orderState.price = prefillPrice;
+      syncStep1Selection();
+      document.getElementById('toStep2').disabled = false;
+    }
+  }
+  function closeOrder(){
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('heroReserveBtn').addEventListener('click', () => openOrder());
+  document.getElementById('navReserveBtn').addEventListener('click', () => openOrder());
+  document.getElementById('orderClose').addEventListener('click', closeOrder);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeOrder(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && overlay.classList.contains('active')) closeOrder(); });
+
+  // product card click -> open with plan preselected, with a card "lift" morph feel
+  document.querySelectorAll('.product-card').forEach(card => {
+    function activate(){
+      const plan = card.getAttribute('data-plan');
+      const price = card.getAttribute('data-price');
+      card.style.transform = 'scale(0.97)';
+      setTimeout(() => { card.style.transform = ''; openOrder(plan, price); }, 140);
+    }
+    card.addEventListener('click', activate);
+    card.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); } });
+  });
+
+  function goToStep(n){
+    steps.forEach(s => s.classList.toggle('active', s.getAttribute('data-step') === String(n)));
+    segs.forEach(seg => seg.classList.toggle('done', parseInt(seg.getAttribute('data-seg')) < n || (n === 4)));
+    if (n === 4){ segs.forEach(seg => seg.classList.add('done')); }
+    panel.scrollTop = 0;
+  }
+
+  // STEP 1: pick options
+  const pickOptions = overlay.querySelectorAll('.pick-option');
+  function syncStep1Selection(){
+    pickOptions.forEach(opt => {
+      opt.classList.toggle('selected', opt.getAttribute('data-plan') === orderState.plan);
+    });
+  }
+  pickOptions.forEach(opt => {
+    opt.addEventListener('click', () => {
+      orderState.plan = opt.getAttribute('data-plan');
+      orderState.price = opt.getAttribute('data-price');
+      syncStep1Selection();
+      document.getElementById('toStep2').disabled = false;
+    });
+  });
+  document.getElementById('toStep2').addEventListener('click', () => goToStep(2));
+
+  // STEP 2: student details validation
+  const fullName = document.getElementById('fullName');
+  const phone = document.getElementById('phone');
+  const hostel = document.getElementById('hostel');
+  const room = document.getElementById('room');
+  const toStep3Btn = document.getElementById('toStep3');
+  function validateStep2(){
+    const ok = fullName.value.trim().length > 1 &&
+               /^\d{10}$/.test(phone.value.trim()) &&
+               hostel.value !== '' &&
+               room.value.trim().length > 0;
+    toStep3Btn.disabled = !ok;
+  }
+  [fullName, phone, hostel, room].forEach(el => el.addEventListener('input', validateStep2));
+  hostel.addEventListener('change', validateStep2);
+  document.getElementById('backTo1').addEventListener('click', () => goToStep(1));
+  toStep3Btn.addEventListener('click', () => {
+    goToStep(3);
+    updatePaySummary();
+  });
+
+  // STEP 3: payment
+  function updatePaySummary(){
+    document.getElementById('sumPlanLabel').textContent = orderState.plan + ' Mattress';
+    const price = parseInt(orderState.price, 10);
+    document.getElementById('sumPlanPrice').textContent = '₹' + price.toLocaleString('en-IN');
+    document.getElementById('sumTotal').textContent = '₹' + price.toLocaleString('en-IN');
+  }
+  const payMethods = overlay.querySelectorAll('.pay-method');
+  const toConfirmBtn = document.getElementById('toConfirm');
+  let selectedMethod = null;
+  payMethods.forEach(m => {
+    m.addEventListener('click', () => {
+      payMethods.forEach(x => x.classList.remove('selected'));
+      m.classList.add('selected');
+      selectedMethod = m.getAttribute('data-method');
+      toConfirmBtn.disabled = false;
+    });
+  });
+  document.getElementById('backTo2').addEventListener('click', () => goToStep(2));
+
+  toConfirmBtn.addEventListener('click', () => {
+    const orderId = '#CC-' + Math.floor(1000 + Math.random() * 8999);
+    document.getElementById('orderIdVal').textContent = orderId;
+    goToStep(4);
+    launchConfetti();
+  });
+
+  document.getElementById('doneBtn').addEventListener('click', () => {
+    closeOrder();
+    // reset for next time
+    setTimeout(() => {
+      orderState = { plan: null, price: null };
+      fullName.value = ''; phone.value = ''; hostel.value = ''; room.value = '';
+      selectedMethod = null;
+      pickOptions.forEach(o => o.classList.remove('selected'));
+      payMethods.forEach(m => m.classList.remove('selected'));
+      toStep3Btn.disabled = true;
+      toConfirmBtn.disabled = true;
+      document.getElementById('toStep2').disabled = true;
+    }, 400);
+  });
+
+  // ---------- Confetti ----------
+  function launchConfetti(){
+    const colors = ['#780001', '#785D32', '#9c7c4f', '#FBE8CC'];
+    const container = document.querySelector('.confirm-wrap');
+    for (let i = 0; i < 26; i++){
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+      piece.style.left = (40 + Math.random() * 20) + '%';
+      piece.style.top = '10%';
+      const dx = (Math.random() - 0.5) * 260;
+      const dy = 200 + Math.random() * 180;
+      const rot = Math.random() * 720 - 360;
+      const dur = 900 + Math.random() * 700;
+      piece.style.transition = `transform ${dur}ms cubic-bezier(.16,1,.3,1), opacity ${dur}ms ease`;
+      container.appendChild(piece);
+      requestAnimationFrame(() => {
+        piece.style.transform = `translate(${dx}px, ${dy}px) rotate(${rot}deg)`;
+        piece.style.opacity = '0';
+      });
+      setTimeout(() => piece.remove(), dur + 100);
+    }
+  }
+
+  // ---------- Ambient particles in blob field ----------
+  const blobField = document.getElementById('blobField');
+  for (let i = 0; i < 10; i++){
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = 3 + Math.random() * 4;
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.top = Math.random() * 100 + '%';
+    p.style.animation = `float-shape ${8 + Math.random() * 10}s ease-in-out infinite`;
+    p.style.animationDelay = (Math.random() * 5) + 's';
+    blobField.appendChild(p);
+  }
+})();
+</script>
+
+</body>
+</html>
